@@ -47,6 +47,29 @@ const educaciones = ref([
     }
 ]);
 
+function limpiarFormulario() {
+    Object.keys(form).forEach(k => (form[k] = ""));
+
+    educaciones.value = [{
+        institucion: "",
+        titulo: "",
+        fechaInicio: "",
+        fechaFin: "",
+        cursandoActualmente: false,
+        errors: { institucion: "", titulo: "", fechaInicio: "", fechaFin: "" }
+    }];
+
+    experiencias.value = [{
+        empresa: "",
+        cargo: "",
+        fechaInicio: "",
+        fechaFin: "",
+        trabajandoActualmente: false,
+        descripcion: "",
+        errors: { empresa: "", cargo: "", fechaInicio: "", fechaFin: "", descripcion: "" }
+    }];
+}
+
 function agregarEducacion() {
     educaciones.value.push({
         institucion: "",
@@ -178,6 +201,7 @@ async function handleSubmit() {
     console.log("educacionesValidas:", educacionesValidas);
     console.log("experienciasValidas:", experienciasValidas);
     await guardarDatos();
+    limpiarFormulario();
     console.log("Datos guardados correctamente!");
 }
 
@@ -191,6 +215,9 @@ function handleFoto(event) {
     };
     reader.readAsDataURL(file);
 }
+
+
+
 </script>
 
 <template>

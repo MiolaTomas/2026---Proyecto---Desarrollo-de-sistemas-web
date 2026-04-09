@@ -17,6 +17,30 @@ function formatFecha(fecha) {
     const [year, month, day] = fecha.split("-");
     return `${day}/${month}/${year}`;
 }
+
+function limpiarFormulario() {
+    Object.keys(form).forEach(k => (form[k] = ""));
+    form.foto = "";
+
+    educaciones.value = [{
+        institucion: "",
+        titulo: "",
+        fechaInicio: "",
+        fechaFin: "",
+        cursandoActualmente: false,
+        errors: { institucion: "", titulo: "", fechaInicio: "", fechaFin: "" }
+    }];
+
+    experiencias.value = [{
+        empresa: "",
+        cargo: "",
+        fechaInicio: "",
+        fechaFin: "",
+        trabajandoActualmente: false,
+        descripcion: "",
+        errors: { empresa: "", cargo: "", fechaInicio: "", fechaFin: "", descripcion: "" }
+    }];
+}
 </script>
 
 <template>
