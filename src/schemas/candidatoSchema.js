@@ -22,6 +22,7 @@ export const candidatoSchema = z.object({
   linkedin: z.string().url("Ingrese una URL válida").or(z.literal("")),
   website: z.string().url("Ingrese una URL válida").or(z.literal("")),
   provincia: z.string().min(1, "Seleccione una provincia"),
+  foto: z.string().optional(),
 });
 
 export const educacionSchema = z

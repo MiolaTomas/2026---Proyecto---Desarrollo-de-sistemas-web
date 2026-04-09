@@ -31,6 +31,30 @@ function formatFecha(fecha) {
 
                 <!-- Header -->
                 <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                        <div class="flex items-center gap-4">
+                            <img v-if="candidato.foto" :src="candidato.foto"
+                                class="w-20 h-20 rounded-full object-cover border-2 border-blue-100" />
+                            <div v-else
+                                class="w-20 h-20 rounded-full bg-blue-50 border-2 border-blue-100 flex items-center justify-center text-2xl text-blue-300">
+                                👤
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">{{ candidato.nombre }} {{
+                                    candidato.apellido }}</h1>
+                                <p class="text-sm text-gray-500 mt-1">{{ candidato.provincia }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col gap-1 mt-4 text-sm text-gray-600">
+                            <span>📧 {{ candidato.email }}</span>
+                            <span>📞 {{ candidato.telefono }}</span>
+                            <a v-if="candidato.linkedin" :href="candidato.linkedin" target="_blank"
+                                class="text-blue-600 hover:underline">🔗 LinkedIn</a>
+                            <a v-if="candidato.website" :href="candidato.website" target="_blank"
+                                class="text-blue-600 hover:underline">🌐 Website</a>
+                        </div>
+                    </div>
                     <h1 class="text-2xl font-bold text-gray-900">{{ candidato.nombre }} {{ candidato.apellido }}</h1>
                     <p class="text-sm text-gray-500 mt-1">{{ candidato.provincia }}</p>
 

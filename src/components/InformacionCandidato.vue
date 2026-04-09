@@ -14,6 +14,7 @@ const form = reactive({
     linkedin: "",
     website: "",
     provincia: "",
+    foto: "",
 });
 
 const errors = reactive({
@@ -179,6 +180,17 @@ async function handleSubmit() {
     await guardarDatos();
     console.log("Datos guardados correctamente!");
 }
+
+function handleFoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        form.foto = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 </script>
 
 <template>
@@ -198,7 +210,12 @@ async function handleSubmit() {
                     <h2 class="text-base font-semibold text-blue-600 border-b border-gray-100 pb-3">
                         Información personal
                     </h2>
-
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-sm font-medium text-gray-700">Foto de perfil</label>
+                        <input type="file" accept="image/*" @change="handleFoto"
+                            class="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 transition-colors duration-200" />
+                        <img v-if="form.foto" :src="form.foto" class="w-24 h-24 rounded-full object-cover mt-2" />
+                    </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <BaseInput label="Nombre" v-model="form.nombre" placeholder="Ingrese su nombre..."
                             :error="errors.nombre" @blur="validateField('nombre')" />
