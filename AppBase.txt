@@ -1,0 +1,673 @@
+<template>
+  <div class="min-h-screen bg-slate-950 text-slate-100" style="font-family: 'IBM Plex Sans', sans-serif">
+    <!-- Top bar -->
+    <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur border-b border-slate-800">
+      <div class="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <span class="text-sm font-semibold tracking-wide text-white">CV Builder</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <span v-if="lastSaved" class="text-xs text-slate-500 hidden sm:block">
+            Guardado {{ lastSaved }}
+          </span>
+          <button @click="handleSave" :disabled="saving" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
+                   bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white">
+            <svg v-if="saving" class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+            <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ saving ? 'Guardando...' : 'Guardar' }}
+          </button>
+          <button @click="handleClear"
+            class="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-400/10 transition-all">
+            Limpiar
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-6 py-12 space-y-14">
+
+      <!-- ── Información personal ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">👤</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Información personal</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Tus datos de contacto y perfil profesional</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Nombre *</label>
+              <input v-model="data.personal.nombre" v-bind="inputClass" placeholder="Juan" @input="autoSave" />
+              <p v-if="personalErrors.nombre" class="text-xs text-red-400">{{ personalErrors.nombre }}</p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Apellido *</label>
+              <input v-model="data.personal.apellido" v-bind="inputClass" placeholder="García" @input="autoSave" />
+              <p v-if="personalErrors.apellido" class="text-xs text-red-400">{{ personalErrors.apellido }}</p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Email *</label>
+              <input v-model="data.personal.email" v-bind="inputClass" type="email" placeholder="juan@email.com"
+                @input="autoSave" />
+              <p v-if="personalErrors.email" class="text-xs text-red-400">{{ personalErrors.email }}</p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Teléfono</label>
+              <input v-model="data.personal.telefono" v-bind="inputClass" type="tel" placeholder="+54 9 11 1234-5678"
+                @input="autoSave" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Ciudad</label>
+              <input v-model="data.personal.ciudad" v-bind="inputClass" placeholder="Buenos Aires" @input="autoSave" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">País</label>
+              <input v-model="data.personal.pais" v-bind="inputClass" placeholder="Argentina" @input="autoSave" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">LinkedIn</label>
+              <input v-model="data.personal.linkedin" v-bind="inputClass" type="url"
+                placeholder="https://linkedin.com/in/..." @input="autoSave" />
+              <p v-if="personalErrors.linkedin" class="text-xs text-red-400">{{ personalErrors.linkedin }}</p>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="field-label">Sitio web / Portfolio</label>
+              <input v-model="data.personal.website" v-bind="inputClass" type="url"
+                placeholder="https://miportfolio.dev" @input="autoSave" />
+              <p v-if="personalErrors.website" class="text-xs text-red-400">{{ personalErrors.website }}</p>
+            </div>
+            <div class="flex flex-col gap-1.5 sm:col-span-2">
+              <label class="field-label">Título profesional</label>
+              <input v-model="data.personal.titulo" v-bind="inputClass"
+                placeholder="Desarrollador Full Stack · Vue.js · Node.js" @input="autoSave" />
+            </div>
+            <div class="flex flex-col gap-1.5 sm:col-span-2">
+              <label class="field-label">Resumen / Perfil</label>
+              <textarea v-model="data.personal.resumen" v-bind="inputClass" rows="4"
+                placeholder="Describí brevemente tu perfil, motivaciones y lo que te diferencia..." @input="autoSave" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Educación ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">🎓</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Educación</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Títulos, carreras e institutos de formación</p>
+        </div>
+        <div class="space-y-4">
+          <div v-for="(edu, i) in data.educacion" :key="i" class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span
+                class="w-6 h-6 rounded-md bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center shrink-0">{{
+                  i + 1 }}</span>
+              <span class="text-sm font-medium text-slate-300 flex-1 truncate">{{ edu.institucion || 'Nueva educación'
+              }}</span>
+              <button @click="removeItem('educacion', i)" class="icon-remove">✕</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Institución *</label>
+                <input v-model="edu.institucion" v-bind="inputClass" placeholder="Universidad de Buenos Aires"
+                  @input="autoSave" />
+                <p v-if="educacionErrors[i]?.institucion" class="text-xs text-red-400">{{ educacionErrors[i].institucion
+                }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Título obtenido *</label>
+                <input v-model="edu.titulo" v-bind="inputClass" placeholder="Lic. en Sistemas" @input="autoSave" />
+                <p v-if="educacionErrors[i]?.titulo" class="text-xs text-red-400">{{ educacionErrors[i].titulo }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Área de estudio</label>
+                <input v-model="edu.area" v-bind="inputClass" placeholder="Informática" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Estado</label>
+                <select v-model="edu.estado" v-bind="inputClass" @change="autoSave">
+                  <option value="">Seleccionar</option>
+                  <option>Completado</option>
+                  <option>En curso</option>
+                  <option>Abandonado</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha inicio</label>
+                <input v-model="edu.inicio" v-bind="inputClass" type="month" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha fin</label>
+                <input v-model="edu.fin" v-bind="inputClass" type="month" :disabled="edu.estado === 'En curso'"
+                  @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="field-label">Descripción</label>
+                <textarea v-model="edu.descripcion" v-bind="inputClass" rows="2"
+                  placeholder="Logros, tesis, actividades relevantes..." @input="autoSave" />
+              </div>
+            </div>
+          </div>
+          <button @click="addItem('educacion')" class="add-btn">＋ Agregar educación</button>
+        </div>
+      </section>
+
+      <!-- ── Experiencia ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">💼</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Experiencia laboral</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Posiciones anteriores y actuales</p>
+        </div>
+        <div class="space-y-4">
+          <div v-for="(exp, i) in data.experiencia" :key="i"
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span
+                class="w-6 h-6 rounded-md bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center shrink-0">{{
+                  i + 1 }}</span>
+              <span class="text-sm font-medium text-slate-300 flex-1 truncate">
+                {{ exp.empresa ? `${exp.cargo || '—'} · ${exp.empresa}` : 'Nueva experiencia' }}
+              </span>
+              <button @click="removeItem('experiencia', i)" class="icon-remove">✕</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Empresa *</label>
+                <input v-model="exp.empresa" v-bind="inputClass" placeholder="Mercado Libre" @input="autoSave" />
+                <p v-if="experienciaErrors[i]?.empresa" class="text-xs text-red-400">{{ experienciaErrors[i].empresa }}
+                </p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Cargo / Puesto *</label>
+                <input v-model="exp.cargo" v-bind="inputClass" placeholder="Senior Frontend Developer"
+                  @input="autoSave" />
+                <p v-if="experienciaErrors[i]?.cargo" class="text-xs text-red-400">{{ experienciaErrors[i].cargo }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Modalidad</label>
+                <select v-model="exp.modalidad" v-bind="inputClass" @change="autoSave">
+                  <option value="">Seleccionar</option>
+                  <option>Presencial</option>
+                  <option>Remoto</option>
+                  <option>Híbrido</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Tipo</label>
+                <select v-model="exp.tipo" v-bind="inputClass" @change="autoSave">
+                  <option value="">Seleccionar</option>
+                  <option>Full-time</option>
+                  <option>Part-time</option>
+                  <option>Freelance</option>
+                  <option>Pasantía</option>
+                </select>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha inicio</label>
+                <input v-model="exp.inicio" v-bind="inputClass" type="month" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha fin</label>
+                <input v-model="exp.fin" v-bind="inputClass" type="month" :disabled="exp.actual" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input type="checkbox" v-model="exp.actual" @change="autoSave"
+                    class="w-4 h-4 rounded accent-blue-500 cursor-pointer" />
+                  <span class="text-sm text-slate-300">Trabajo actualmente aquí</span>
+                </label>
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="field-label">Descripción de tareas y logros</label>
+                <textarea v-model="exp.descripcion" v-bind="inputClass" rows="3"
+                  placeholder="• Lideré la migración a Vue 3&#10;• Reduje el tiempo de carga un 40%..."
+                  @input="autoSave" />
+              </div>
+            </div>
+          </div>
+          <button @click="addItem('experiencia')" class="add-btn">＋ Agregar experiencia</button>
+        </div>
+      </section>
+
+      <!-- ── Habilidades ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">⚡</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Habilidades</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Técnicas, blandas e idiomas</p>
+        </div>
+        <div class="space-y-4">
+
+          <!-- Técnicas -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-400 mb-4">Habilidades técnicas</p>
+            <div class="space-y-3">
+              <div v-for="(skill, i) in data.habilidades.tecnicas" :key="i" class="flex items-center gap-3">
+                <input v-model="skill.nombre" v-bind="inputClass" placeholder="Vue.js" class="flex-1"
+                  @input="autoSave" />
+                <span class="text-xs text-slate-400 w-20 text-right shrink-0 hidden sm:block">{{
+                  levelLabels[skill.nivel_num] }}</span>
+                <input type="range" v-model.number="skill.nivel_num" min="1" max="5"
+                  class="w-24 accent-blue-500 cursor-pointer shrink-0"
+                  @input="skill.nivel = levelLabels[skill.nivel_num]; autoSave()" />
+                <button @click="removeSkill('tecnicas', i)" class="icon-remove">✕</button>
+              </div>
+            </div>
+            <button @click="addSkill('tecnicas')"
+              class="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors font-medium">
+              + Agregar habilidad técnica
+            </button>
+          </div>
+
+          <!-- Blandas -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-400 mb-4">Habilidades blandas</p>
+            <div class="flex flex-wrap gap-2 mb-3 min-h-8">
+              <span v-for="(s, i) in data.habilidades.blandas" :key="i"
+                class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 text-blue-300 text-sm border border-blue-500/25">
+                {{ s }}
+                <button @click="removeSoftSkill(i)"
+                  class="text-blue-400 hover:text-white transition-colors text-xs leading-none">✕</button>
+              </span>
+            </div>
+            <input v-model="newSoftSkill" v-bind="inputClass" placeholder="Ej: Liderazgo — presioná Enter para agregar"
+              @keydown.enter.prevent="addSoftSkill" />
+          </div>
+
+          <!-- Idiomas -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <p class="text-xs font-bold uppercase tracking-widest text-blue-400 mb-4">Idiomas</p>
+            <div class="space-y-3">
+              <div v-for="(lang, i) in data.habilidades.idiomas" :key="i" class="flex items-center gap-3">
+                <input v-model="lang.nombre" v-bind="inputClass" placeholder="Inglés" class="flex-1"
+                  @input="autoSave" />
+                <select v-model="lang.nivel" v-bind="inputClass" class="w-40 shrink-0" @change="autoSave">
+                  <option value="">Nivel</option>
+                  <option>Básico</option>
+                  <option>Intermedio</option>
+                  <option>Avanzado</option>
+                  <option>Nativo</option>
+                </select>
+                <button @click="removeItem('habilidades.idiomas', i)" class="icon-remove">✕</button>
+              </div>
+            </div>
+            <button @click="data.habilidades.idiomas.push({ nombre: '', nivel: '' }); autoSave()"
+              class="mt-4 text-sm text-blue-400 hover:text-blue-300 transition-colors font-medium">
+              + Agregar idioma
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Proyectos ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">🚀</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Proyectos</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Proyectos personales o profesionales destacados</p>
+        </div>
+        <div class="space-y-4">
+          <div v-for="(proj, i) in data.proyectos" :key="i"
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span
+                class="w-6 h-6 rounded-md bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center shrink-0">{{
+                  i + 1 }}</span>
+              <span class="text-sm font-medium text-slate-300 flex-1 truncate">{{ proj.nombre || 'Nuevo proyecto'
+              }}</span>
+              <button @click="removeItem('proyectos', i)" class="icon-remove">✕</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Nombre del proyecto *</label>
+                <input v-model="proj.nombre" v-bind="inputClass" placeholder="DevTracker" @input="autoSave" />
+                <p v-if="proyectosErrors[i]?.nombre" class="text-xs text-red-400">{{ proyectosErrors[i].nombre }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Rol</label>
+                <input v-model="proj.rol" v-bind="inputClass" placeholder="Lead Developer" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">URL / Demo</label>
+                <input v-model="proj.url" v-bind="inputClass" type="url" placeholder="https://..." @input="autoSave" />
+                <p v-if="proyectosErrors[i]?.url" class="text-xs text-red-400">{{ proyectosErrors[i].url }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Repositorio</label>
+                <input v-model="proj.repo" v-bind="inputClass" type="url" placeholder="https://github.com/..."
+                  @input="autoSave" />
+                <p v-if="proyectosErrors[i]?.repo" class="text-xs text-red-400">{{ proyectosErrors[i].repo }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="field-label">Tecnologías</label>
+                <input v-model="proj.tecnologias" v-bind="inputClass"
+                  placeholder="Vue 3, Vite, Tailwind, Node.js, PostgreSQL" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="field-label">Descripción</label>
+                <textarea v-model="proj.descripcion" v-bind="inputClass" rows="3"
+                  placeholder="Qué hace, cuál fue tu contribución, qué problema resuelve..." @input="autoSave" />
+              </div>
+            </div>
+          </div>
+          <button @click="addItem('proyectos')" class="add-btn">＋ Agregar proyecto</button>
+        </div>
+      </section>
+
+      <!-- ── Certificaciones ── -->
+      <section>
+        <div class="mb-5">
+          <div class="flex items-center gap-2.5 mb-1">
+            <span class="text-xl">🏅</span>
+            <h2 class="text-lg font-bold text-white tracking-tight">Certificaciones</h2>
+          </div>
+          <p class="text-sm text-slate-500 ml-9">Cursos, certificados y acreditaciones</p>
+        </div>
+        <div class="space-y-4">
+          <div v-for="(cert, i) in data.certificaciones" :key="i"
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <span
+                class="w-6 h-6 rounded-md bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center shrink-0">{{
+                  i + 1 }}</span>
+              <span class="text-sm font-medium text-slate-300 flex-1 truncate">{{ cert.nombre || 'Nueva certificación'
+              }}</span>
+              <button @click="removeItem('certificaciones', i)" class="icon-remove">✕</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Nombre del certificado *</label>
+                <input v-model="cert.nombre" v-bind="inputClass" placeholder="AWS Solutions Architect"
+                  @input="autoSave" />
+                <p v-if="certificacionesErrors[i]?.nombre" class="text-xs text-red-400">{{
+                  certificacionesErrors[i].nombre }}</p>
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Organización emisora</label>
+                <input v-model="cert.organizacion" v-bind="inputClass" placeholder="Amazon Web Services"
+                  @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha de obtención</label>
+                <input v-model="cert.fecha" v-bind="inputClass" type="month" @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label class="field-label">Fecha de expiración</label>
+                <input v-model="cert.expiracion" v-bind="inputClass" type="month" :disabled="cert.noExpira"
+                  @input="autoSave" />
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                  <input type="checkbox" v-model="cert.noExpira" @change="autoSave"
+                    class="w-4 h-4 rounded accent-blue-500 cursor-pointer" />
+                  <span class="text-sm text-slate-300">Sin fecha de expiración</span>
+                </label>
+              </div>
+              <div class="flex flex-col gap-1.5 sm:col-span-2">
+                <label class="field-label">URL de verificación</label>
+                <input v-model="cert.url" v-bind="inputClass" type="url" placeholder="https://credential.net/..."
+                  @input="autoSave" />
+                <p v-if="certificacionesErrors[i]?.url" class="text-xs text-red-400">{{ certificacionesErrors[i].url }}
+                </p>
+              </div>
+            </div>
+          </div>
+          <button @click="addItem('certificaciones')" class="add-btn">＋ Agregar certificación</button>
+        </div>
+      </section>
+
+      <!-- Bottom save -->
+      <div class="flex justify-end pb-8">
+        <button @click="handleSave" :disabled="saving" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold
+                 transition-all disabled:opacity-50 shadow-lg shadow-blue-900/30">
+          <svg v-if="saving" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+          </svg>
+          {{ saving ? 'Guardando...' : 'Guardar CV' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <Transition name="toast">
+      <div v-if="toast.show" :class="['fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium shadow-xl border',
+        toast.type === 'success'
+          ? 'bg-slate-800 border-slate-700 text-white'
+          : 'bg-red-950 border-red-800 text-red-200']">
+        {{ toast.type === 'success' ? '✓' : '⚠' }} {{ toast.message }}
+      </div>
+    </Transition>
+
+  </div>
+</template>
+
+<script setup>
+import { ref, reactive, onMounted } from 'vue'
+import { loadCV, saveCV, clearCV } from './db.js'
+import BaseInput from "@/components/BaseInput.vue";
+import {
+  personalSchema,
+  educacionItemSchema,
+  experienciaItemSchema,
+  proyectoItemSchema,
+  certificacionItemSchema,
+  validateSection,
+  validateArray,
+} from '@/Cvschema.js'
+
+// ── Constants ──────────────────────────────────────────────
+const levelLabels = ['', 'Básico', 'Elemental', 'Intermedio', 'Avanzado', 'Experto']
+
+const inputClass = {
+  class: [
+    'w-full bg-slate-800/60 border border-slate-700 rounded-lg px-3 py-2.5',
+    'text-sm text-slate-100 placeholder:text-slate-500',
+    'focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500',
+    'disabled:opacity-40 disabled:cursor-not-allowed transition-all',
+  ].join(' ')
+}
+
+const defaultItems = {
+  educacion: () => ({ institucion: '', titulo: '', area: '', estado: '', inicio: '', fin: '', descripcion: '' }),
+  experiencia: () => ({ empresa: '', cargo: '', modalidad: '', tipo: '', inicio: '', fin: '', actual: false, descripcion: '' }),
+  proyectos: () => ({ nombre: '', rol: '', url: '', repo: '', tecnologias: '', descripcion: '' }),
+  certificaciones: () => ({ nombre: '', organizacion: '', fecha: '', expiracion: '', noExpira: false, url: '' }),
+}
+
+const makeDefaultData = () => ({
+  personal: { nombre: '', apellido: '', email: '', telefono: '', ciudad: '', pais: '', linkedin: '', website: '', titulo: '', resumen: '' },
+  educacion: [],
+  experiencia: [],
+  habilidades: { tecnicas: [], blandas: [], idiomas: [] },
+  proyectos: [],
+  certificaciones: [],
+})
+
+// ── State ──────────────────────────────────────────────────
+const data = reactive(makeDefaultData())
+const saving = ref(false)
+const lastSaved = ref(null)
+const newSoftSkill = ref('')
+const toast = reactive({ show: false, message: '', type: 'success' })
+let autoSaveTimer = null
+
+// Validation errors
+const personalErrors = ref({})
+const educacionErrors = ref([])
+const experienciaErrors = ref([])
+const proyectosErrors = ref([])
+const certificacionesErrors = ref([])
+
+// ── IndexedDB via Dexie ────────────────────────────────────
+onMounted(async () => {
+  try {
+    const stored = await loadCV()
+    if (stored) Object.assign(data, { ...makeDefaultData(), ...stored })
+  } catch (e) {
+    showToast('Error al cargar los datos guardados', 'error')
+  }
+})
+
+async function handleSave() {
+  // Validate all sections with Zod
+  const pv = validateSection(personalSchema, data.personal)
+  personalErrors.value = pv.errors
+  educacionErrors.value = validateArray(educacionItemSchema, data.educacion)
+  experienciaErrors.value = validateArray(experienciaItemSchema, data.experiencia)
+  proyectosErrors.value = validateArray(proyectoItemSchema, data.proyectos)
+  certificacionesErrors.value = validateArray(certificacionItemSchema, data.certificaciones)
+
+  const hasErrors =
+    !pv.success ||
+    educacionErrors.value.some(e => Object.keys(e).length > 0) ||
+    experienciaErrors.value.some(e => Object.keys(e).length > 0) ||
+    proyectosErrors.value.some(e => Object.keys(e).length > 0) ||
+    certificacionesErrors.value.some(e => Object.keys(e).length > 0)
+
+  if (hasErrors) {
+    showToast('Corregí los errores antes de guardar', 'error')
+    return
+  }
+
+  saving.value = true
+  try {
+    await saveCV(JSON.parse(JSON.stringify(data)))
+    lastSaved.value = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    showToast('CV guardado correctamente ✓', 'success')
+  } catch (e) {
+    showToast('Error al guardar en IndexedDB', 'error')
+  } finally {
+    saving.value = false
+  }
+}
+
+// Silent autosave (no validation, no toast)
+function autoSave() {
+  clearTimeout(autoSaveTimer)
+  autoSaveTimer = setTimeout(async () => {
+    try {
+      await saveCV(JSON.parse(JSON.stringify(data)))
+      lastSaved.value = new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })
+    } catch { }
+  }, 1000)
+}
+
+async function handleClear() {
+  if (!confirm('¿Borrar todos los datos del CV? Esta acción no se puede deshacer.')) return
+  Object.assign(data, makeDefaultData())
+  personalErrors.value = {}
+  educacionErrors.value = []
+  experienciaErrors.value = []
+  proyectosErrors.value = []
+  certificacionesErrors.value = []
+  await clearCV()
+  lastSaved.value = null
+}
+
+function showToast(message, type = 'success') {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+  setTimeout(() => { toast.show = false }, 3500)
+}
+
+// ── List helpers ───────────────────────────────────────────
+function addItem(section) {
+  if (section in defaultItems) {
+    data[section].push(defaultItems[section]())
+    autoSave()
+  }
+}
+
+function removeItem(section, index) {
+  if (section.includes('.')) {
+    const [parent, child] = section.split('.')
+    data[parent][child].splice(index, 1)
+  } else {
+    data[section].splice(index, 1)
+  }
+  autoSave()
+}
+
+// ── Skills ─────────────────────────────────────────────────
+function addSkill(type) {
+  data.habilidades[type].push({ nombre: '', nivel: levelLabels[1], nivel_num: 1 })
+  autoSave()
+}
+
+function removeSkill(type, index) {
+  data.habilidades[type].splice(index, 1)
+  autoSave()
+}
+
+function addSoftSkill() {
+  const val = newSoftSkill.value.trim()
+  if (val && !data.habilidades.blandas.includes(val)) {
+    data.habilidades.blandas.push(val)
+    newSoftSkill.value = ''
+    autoSave()
+  }
+}
+
+function removeSoftSkill(index) {
+  data.habilidades.blandas.splice(index, 1)
+  autoSave()
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+@reference "@/assets/main.css";
+
+.field-label {
+  @apply text-xs font-semibold uppercase tracking-widest text-slate-400;
+}
+
+.icon-remove {
+  @apply p-1.5 rounded-lg text-slate-600 hover:text-red-400 hover:bg-red-400/10 transition-all text-xs;
+}
+
+.add-btn {
+  @apply w-full py-3.5 rounded-xl border-2 border-dashed border-slate-800 text-slate-500 hover:border-blue-500/50 hover:text-blue-400 hover:bg-blue-500/5 text-sm font-medium transition-all;
+}
+
+
+input[type="month"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.4);
+}
+
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.25s cubic-bezier(.4, 0, .2, 1);
+}
+
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+}
+</style>
