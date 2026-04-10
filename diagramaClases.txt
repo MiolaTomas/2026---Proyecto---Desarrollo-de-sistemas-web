@@ -5,11 +5,11 @@ apellido:
 telefono:
 email:
 linkedin:
-website:
+sitioWeb:
 provincia:
 ciudad:
-foto:
-curriculum:
+fotoPerfil:
+archivoCurriculum:
 }
 
 class FormacionAcademica{
@@ -31,7 +31,7 @@ actualmenteTrabajando:
 }
 
 class Idioma{
-idioma:
+nombre:
 nivel:
 }
 
@@ -42,8 +42,46 @@ empresaEmisora:
 archivo:
 }
 
+class Habilidad{
+nombre:
+}
+
+class Empresa{
+nombre:
+razonSocial:
+cuit:
+email:
+sitioWeb:
+telefono:
+linkedin:
+industria:
+tamañoEmpresa:
+provincia:
+ciudad:
+direccion:
+fotoEmpresa:
+}
+
+class OfertaLaboral{
+tituloOferta:
+provincia:
+ciudad:
+contrato: [contractor, full time, part time, pasantia-remunerada, pasantia-no-remunerada]
+modalidad: [presencial, remoto, hibrida]
+}
+
+class Usuario{
+email:
+contraseña:
+}
+
+
 Candidato "1" *--> "0..*" FormacionAcademica
 Candidato "1" *--> "0..*" ExperienciaLaboral
 Candidato "1" *--> "0..*" Idioma
 Candidato "1" *--> "0..*" Certificacion
+Candidato "1" *--> "0..*" Habilidad
+
+Usuario "1" o--> "1" Candidato
+Usuario "1" o--> "1" Empresa
 @enduml
