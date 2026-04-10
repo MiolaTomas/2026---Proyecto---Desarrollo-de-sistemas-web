@@ -1,0 +1,49 @@
+@startuml
+class Candidato{
+nombre:
+apellido:
+telefono:
+email:
+linkedin:
+website:
+provincia:
+ciudad:
+foto:
+curriculum:
+}
+
+class FormacionAcademica{
+centroEducativo:
+nivelEstudios:
+carrera:
+desde:
+hasta:
+actualmenteCursando: boolean
+}
+
+class ExperienciaLaboral{
+cargo:
+nombreEmpresa:
+descripcion:
+desde:
+hasta:
+actualmenteTrabajando:
+}
+
+class Idioma{
+idioma:
+nivel:
+}
+
+class Certificacion{
+nombre:
+descripcion:
+empresaEmisora:
+archivo:
+}
+
+Candidato "1" *--> "0..*" FormacionAcademica
+Candidato "1" *--> "0..*" ExperienciaLaboral
+Candidato "1" *--> "0..*" Idioma
+Candidato "1" *--> "0..*" Certificacion
+@enduml
