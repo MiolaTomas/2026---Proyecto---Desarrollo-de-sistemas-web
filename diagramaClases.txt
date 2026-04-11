@@ -64,10 +64,16 @@ fotoEmpresa:
 
 class OfertaLaboral{
 tituloOferta:
+descripcion:
 provincia:
 ciudad:
-contrato: [contractor, full time, part time, pasantia-remunerada, pasantia-no-remunerada]
+jornada: [full time, part time]
+tipoContrato: [Indefinido, temporal, pasantia, contractor]
 modalidad: [presencial, remoto, hibrida]
+tipoTurno: [fijo, rotativo, nocturno, mixto]
+horarioEntrada:
+horarioSalida:
+añosExperiencia:
 }
 
 class Usuario{
