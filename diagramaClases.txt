@@ -76,6 +76,14 @@ horarioSalida:
 añosExperiencia:
 }
 
+class Postulacion{
+fechaPostulacion:
+}
+
+class OfertaFavorita{
+fechaGuardado:
+}
+
 class Usuario{
 email:
 contraseña:
@@ -90,4 +98,12 @@ Candidato "1" *--> "0..*" Habilidad
 
 Usuario "1" o--> "1" Candidato
 Usuario "1" o--> "1" Empresa
+
+Empresa"1" *--> "*" OfertaLaboral
+
+Candidato "1" -- "0...*" Postulacion
+OfertaLaboral "1" -- "0...*" Postulacion
+
+Usuario "1" -- "0...*" OfertaFavorita
+OfertaFavorita "1" -- "0...*" OfertaLaboral
 @enduml
