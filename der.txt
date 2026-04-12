@@ -1,0 +1,11 @@
+Usuario: idUsuario, email, contraseña
+Candidato: idCandidato, idUsuario, nombre, apellido, telefono, email, linkedin, sitioWeb, provincia, ciudad, fotoPerfil, archivoCurriculum
+Empresa: idEmpresa, idUsuario, nombre, razonSocial, cuit, email, sitioWeb, telefono, linkedin, industria, tamañoEmpresa, provincia, ciudad, direccion, fotoEmpresa
+Habilidad: idHabilidad, nombre, idCandidato
+Certificacion: idCertificacion, nombre, descripcion, empresaEmisora, archivo, idCandidato
+Idioma: idIdioma, nombre, nivel, idCandidato
+ExperienciaLaboral: idExperienciaLaboral, cargo, nombreEmpresa, descripcion, desde, hasta, actualmenteTrabajando, idCandidato
+FormacionAcademica: idFormacionAcademica, centroEducativo, nivelEstudios, carrera, desde, hasta, actualmenteCursando, idCandidato
+OfertaLaboral: idOfertaLaboral, idEmpresa, tituloOferta, descripcion, provincia, ciudad, jornada, tipoContrato, modalidad, tipoTurno, horarioEntrada, horarioSalida, anosExperiencia
+Postulacion: idPostulacion, idCandidato, idOfertaLaboral, fechaPostulacion, estado
+OfertaFavorita: idOfertaFavorita, idUsuario, idOfertaLaboral, fechaGuardado

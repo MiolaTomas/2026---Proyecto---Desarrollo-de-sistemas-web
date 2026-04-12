@@ -1,0 +1,8 @@
+{
+  "levels": [
+    { "code": "basic", "label": "Básico" },
+    { "code": "intermediate", "label": "Intermedio" },
+    { "code": "advanced", "label": "Avanzado" },
+    { "code": "conversational", "label": "Conversacional" }
+  ]
+}

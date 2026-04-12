@@ -1,13 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { db } from "@/db/db.js";
+import { useRoute } from "vue-router";
 
+const route = useRoute();
 const candidato = ref(null);
 const educaciones = ref([]);
 const experiencias = ref([]);
 
 onMounted(async () => {
-    candidato.value = await db.candidato.toCollection().first();
+    const id = Number(route.params.id);
+    candidato.value = await db.candidato.get(id);
     educaciones.value = await db.educaciones.toArray();
     experiencias.value = await db.experiencias.toArray();
 });
@@ -16,30 +18,6 @@ function formatFecha(fecha) {
     if (!fecha) return "Actualidad";
     const [year, month, day] = fecha.split("-");
     return `${day}/${month}/${year}`;
-}
-
-function limpiarFormulario() {
-    Object.keys(form).forEach(k => (form[k] = ""));
-    form.foto = "";
-
-    educaciones.value = [{
-        institucion: "",
-        titulo: "",
-        fechaInicio: "",
-        fechaFin: "",
-        cursandoActualmente: false,
-        errors: { institucion: "", titulo: "", fechaInicio: "", fechaFin: "" }
-    }];
-
-    experiencias.value = [{
-        empresa: "",
-        cargo: "",
-        fechaInicio: "",
-        fechaFin: "",
-        trabajandoActualmente: false,
-        descripcion: "",
-        errors: { empresa: "", cargo: "", fechaInicio: "", fechaFin: "", descripcion: "" }
-    }];
 }
 </script>
 

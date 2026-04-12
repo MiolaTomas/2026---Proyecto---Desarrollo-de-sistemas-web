@@ -1,0 +1,28 @@
+{
+  "languages": [
+    { "name_es": "Inglés", "name_en": "English", "code": "en" },
+    {
+      "name_es": "Chino Mandarín",
+      "name_en": "Mandarin Chinese",
+      "code": "zh"
+    },
+    { "name_es": "Hindi", "name_en": "Hindi", "code": "hi" },
+    { "name_es": "Español", "name_en": "Spanish", "code": "es" },
+    { "name_es": "Francés", "name_en": "French", "code": "fr" },
+    { "name_es": "Árabe", "name_en": "Arabic", "code": "ar" },
+    { "name_es": "Bengalí", "name_en": "Bengali", "code": "bn" },
+    { "name_es": "Ruso", "name_en": "Russian", "code": "ru" },
+    { "name_es": "Portugués", "name_en": "Portuguese", "code": "pt" },
+    { "name_es": "Indonesio", "name_en": "Indonesian", "code": "id" },
+    { "name_es": "Urdu", "name_en": "Urdu", "code": "ur" },
+    { "name_es": "Alemán", "name_en": "German", "code": "de" },
+    { "name_es": "Japonés", "name_en": "Japanese", "code": "ja" },
+    { "name_es": "Suajili", "name_en": "Swahili", "code": "sw" },
+    { "name_es": "Maratí", "name_en": "Marathi", "code": "mr" },
+    { "name_es": "Telugu", "name_en": "Telugu", "code": "te" },
+    { "name_es": "Turco", "name_en": "Turkish", "code": "tr" },
+    { "name_es": "Coreano", "name_en": "Korean", "code": "ko" },
+    { "name_es": "Vietnamita", "name_en": "Vietnamese", "code": "vi" },
+    { "name_es": "Italiano", "name_en": "Italian", "code": "it" }
+  ]
+}
