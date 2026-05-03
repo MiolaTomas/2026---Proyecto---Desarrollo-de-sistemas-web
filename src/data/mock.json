@@ -1,0 +1,114 @@
+{
+  "usuarios": [
+    {
+      "email": "juan.perez@gmail.com",
+      "contraseña": "hashed_password_123",
+      "candidato": {
+        "nombre": "Juan",
+        "apellido": "Perez",
+        "telefono": "+5493415551234",
+        "email": "juan.perez@gmail.com",
+        "linkedin": "https://linkedin.com/in/juanperez",
+        "sitioWeb": "https://juanperez.dev",
+        "provincia": "Santa Fe",
+        "ciudad": "Rosario",
+        "fotoPerfil": "perfil.jpg",
+        "archivoCurriculum": "cv.pdf",
+        "formaciones": [
+          {
+            "centroEducativo": "UTN",
+            "nivelEstudios": "Universitario",
+            "carrera": "Ingeniería en Sistemas",
+            "desde": "2018-03-01",
+            "hasta": null,
+            "actualmenteCursando": true
+          }
+        ],
+        "experiencias": [
+          {
+            "cargo": "Desarrollador Backend",
+            "nombreEmpresa": "TechSoft",
+            "descripcion": "Desarrollo de APIs en Node.js",
+            "desde": "2022-01-01",
+            "hasta": null,
+            "actualmenteTrabajando": true
+          }
+        ],
+        "idiomas": [
+          {
+            "nombre": "Inglés",
+            "nivel": "C1"
+          }
+        ],
+        "certificaciones": [
+          {
+            "nombre": "AWS Cloud Practitioner",
+            "descripcion": "Certificación básica de AWS",
+            "empresaEmisora": "Amazon",
+            "archivo": "aws_cert.pdf"
+          }
+        ],
+        "habilidades": [
+          { "nombre": "JavaScript" },
+          { "nombre": "Node.js" },
+          { "nombre": "PostgreSQL" }
+        ],
+        "postulaciones": [
+          {
+            "estadoPostulacion": "en proceso",
+            "fechaPostulacion": "2026-04-20",
+            "ofertaId": 1
+          }
+        ],
+        "ofertasFavoritas": [
+          {
+            "fechaGuardado": "2026-04-18",
+            "ofertaId": 1
+          }
+        ]
+      }
+    },
+    {
+      "email": "hr@empresa.com",
+      "contraseña": "hashed_password_456",
+      "empresa": {
+        "nombre": "DevSolutions",
+        "razonSocial": "DevSolutions SRL",
+        "cuit": "30-12345678-9",
+        "email": "contacto@devsolutions.com",
+        "sitioWeb": "https://devsolutions.com",
+        "telefono": "+5493414445678",
+        "linkedin": "https://linkedin.com/company/devsolutions",
+        "industria": "Tecnología",
+        "tamañoEmpresa": "50-100",
+        "provincia": "Santa Fe",
+        "ciudad": "Santa Fe",
+        "direccion": "Av. Siempre Viva 123",
+        "fotoEmpresa": "empresa.jpg",
+        "ofertas": [
+          {
+            "id": 1,
+            "tituloOferta": "Backend Developer",
+            "descripcion": "Buscamos desarrollador con experiencia en Node.js",
+            "provincia": "Santa Fe",
+            "ciudad": "Santa Fe",
+            "jornada": "full time",
+            "tipoContrato": "Indefinido",
+            "modalidad": "remoto",
+            "tipoTurno": "fijo",
+            "horarioEntrada": "09:00",
+            "horarioSalida": "18:00",
+            "añosExperiencia": 2,
+            "postulaciones": [
+              {
+                "estadoPostulacion": "en proceso",
+                "fechaPostulacion": "2026-04-20",
+                "candidatoEmail": "juan.perez@gmail.com"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

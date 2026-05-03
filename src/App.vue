@@ -1,6 +1,7 @@
 <template>
-  <RouterView />
+  <hero />
 </template>
 
 <script setup>
+import hero from "@/components/hero.vue"
 </script>

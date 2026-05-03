@@ -6,6 +6,7 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 const con = new db("./portal.db");
+con.pragma("foreign_keys = ON");
 console.log("works");
 
 app.post("/candidatos", (req, res) => {
@@ -43,6 +44,13 @@ app.get("/candidatos/:id", (req, res) => {
   const stmt = con.prepare("SELECT * FROM Candidato WHERE idCandidato = ?");
   const candidato = stmt.get(candidatoId);
   res.json(candidato);
+});
+
+app.delete("/candidatos/:id", (req, res) => {
+  const candidatoId = req.params.id;
+  const stmt = con.prepare("DELETE FROM Candidato WHERE idCandidato = ?");
+  stmt.run(candidatoId);
+  res.json({ mensaje: "Candidato eliminado correctamente" });
 });
 
 app.listen(3000, () => {
