@@ -1,110 +1,151 @@
 @startuml
 class Candidato{
-nombre:
-apellido:
-telefono:
-email:
-linkedin:
-sitioWeb:
-provincia:
-ciudad:
-fotoPerfil:
-archivoCurriculum:
+idCandidato: int
+nombre: String
+apellido: String
+telefono: String
+email: String
+linkedin: String
+sitioWeb: String
+provincia: String
+ciudad: String
+fotoPerfil: String
+archivoCurriculum: String
+idUsuario [fk]: int
 }
 
 class FormacionAcademica{
-centroEducativo:
-nivelEstudios:
-carrera:
-desde:
-hasta:
+idFormacionAcademica: int
+nivelEstudios: String
+carrera: String
+desde: Date
+hasta: Date
 actualmenteCursando: boolean
+idCandidato [fk]: int
+idInstitucion [fk]: int
+}
+
+class Institucion{
+idInstitucion: int
+nombre: String
+tipo: String
+provincia: String
+ciudad: String
+sitioWeb: String
 }
 
 class ExperienciaLaboral{
-cargo:
-nombreEmpresa:
-descripcion:
-desde:
-hasta:
-actualmenteTrabajando:
+idExperienciaLaboral: int
+cargo: String
+nombreEmpresa: String
+descripcion: String
+desde: Date
+hasta: Date
+actualmenteTrabajando: boolean
+idCandidato [fk]: int
 }
 
 class Idioma{
-nombre:
-nivel:
+idIdioma: int
+nombre: String
+nivel: String
+idCandidato [fk]: int
 }
 
 class Certificacion{
-nombre:
-descripcion:
-empresaEmisora:
-archivo:
+idCertificacion: int
+nombre: String
+descripcion: String
+empresaEmisora: String
+archivo: String
+idCandidato [fk]: int
 }
 
 class Habilidad{
-nombre:
+idHabilidad: int
+nombre: String
+}
+
+class CandidatoHabilidad{
+idCandidato [fk]: int
+idHabilidad [fk]: int
+nivel: String
+añosExperiencia: int
 }
 
 class Empresa{
-nombre:
-razonSocial:
-cuit:
-email:
-sitioWeb:
-telefono:
-linkedin:
-industria:
-tamañoEmpresa:
-provincia:
-ciudad:
-direccion:
-fotoEmpresa:
+idEmpresa: int
+nombre: String
+razonSocial: String
+cuit: String
+email: String
+sitioWeb: String
+telefono: String
+linkedin: String
+industria: String
+tamañoEmpresa: String
+provincia: String
+ciudad: String
+direccion: String
+fotoEmpresa: String
+idUsuario [fk]: int
 }
 
 class OfertaLaboral{
-tituloOferta:
-descripcion:
-provincia:
-ciudad:
-jornada: [full time, part time]
-tipoContrato: [Indefinido, temporal, pasantia, contractor]
-modalidad: [presencial, remoto, hibrida]
-tipoTurno: [fijo, rotativo, nocturno, mixto]
-horarioEntrada:
-horarioSalida:
-añosExperiencia:
+idOfertaLaboral: int
+tituloOferta: String
+descripcion: String
+provincia: String
+ciudad: String
+jornada: String
+tipoContrato: String
+modalidad: String
+tipoTurno: String
+horarioEntrada: String
+horarioSalida: String
+añosExperiencia: int
+idEmpresa [fk]: int
 }
 
 class Postulacion{
-estadoPostulacion: [postulado, cv visto, en proceso, finalista]
-fechaPostulacion:
+idPostulacion: int
+estadoPostulacion: String
+fechaPostulacion: Date
+idCandidato [fk]: int
+idOfertaLaboral [fk]: int
 }
 
 class OfertaFavorita{
-fechaGuardado:
+idOfertaFavorita: int
+fechaGuardado: Date
+idCandidato [fk]: int
+idOfertaLaboral [fk]: int
 }
 
 class Usuario{
-email:
-contraseña:
+idUsuario: int
+email: String
+passwordHash: String
 }
 
-
 Candidato "1" *--> "0..*" FormacionAcademica
+Institucion "1" -- "0..*" FormacionAcademica
+
 Candidato "1" *--> "0..*" ExperienciaLaboral
 Candidato "1" *--> "0..*" Idioma
 Candidato "1" *--> "0..*" Certificacion
-Candidato "1" *--> "0..*" Habilidad
+
+Candidato "1" -- "0..*" CandidatoHabilidad
+Habilidad "1" -- "0..*" CandidatoHabilidad
 
 Usuario "1" o--> "1" Candidato
 Usuario "1" o--> "1" Empresa
 
-Empresa"1" *--> "*" OfertaLaboral
+Empresa "1" *--> "0..*" OfertaLaboral
 
-Candidato "1" -- "0...*" Postulacion
-OfertaLaboral "1" -- "0...*" Postulacion
+Candidato "1" -- "0..*" Postulacion
+OfertaLaboral "1" -- "0..*" Postulacion
 
-Usuario "1" -- "0...*" OfertaFavorita
-OfertaFavorita "1" -- "0...*" OfertaLaboral
+Candidato "1" -- "0..*" OfertaFavorita
+OfertaLaboral "1" -- "0..*" OfertaFavorita
 @enduml
