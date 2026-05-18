@@ -4,7 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  font-family: var(--font-display);
+}
+
 :root {
   --color-primary: 21 125 202;
   --color-gray: 138 138 138;
+  --font-display: Roboto, "sans-serif";
 }
